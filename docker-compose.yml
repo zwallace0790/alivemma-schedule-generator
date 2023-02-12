@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  react:
+    container_name: react_schedule_generator
+    build: ./client
+    volumes:
+      - ./client:/src
+      - react-build:/src/dist
+    command: yarn run start
+
+  php:
+    image: php:7.4-cli
+    working_dir: /var/www/html
+    container_name: php_schedule_generator
+    ports:
+      - 8000:8000
+    volumes:
+      - react-build:/var/www/html
+      - ./api:/var/www/html/api
+    command: php -S 0.0.0.0:8000 -t /var/www/html
+
+volumes:
+  react-build:
